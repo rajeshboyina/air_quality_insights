@@ -14,11 +14,13 @@ if not os.path.exists(CREDENTIALS_FILE):
 with open(CREDENTIALS_FILE, "r") as file:
     USER_CREDENTIALS = json.load(file)
 
-# Initialize session state for login
+# Initialize session state for login and password update flow
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 if "username" not in st.session_state:
     st.session_state["username"] = ""
+if "show_change_password" not in st.session_state:
+    st.session_state["show_change_password"] = False
 
 
 # Login function
@@ -47,11 +49,26 @@ def signup(username, password):
         st.success("Signup successful! You can now log in.")
 
 
+# Change Password function
+def change_password(username, old_password, new_password):
+    if USER_CREDENTIALS.get(username) == old_password:
+        USER_CREDENTIALS[username] = new_password
+        with open(CREDENTIALS_FILE, "w") as file:
+            json.dump(USER_CREDENTIALS, file)
+        st.success("Password updated successfully!")
+        st.session_state["show_change_password"] = (
+            False  # Hide the password change fields
+        )
+    else:
+        st.error("Old password is incorrect. Please try again.")
+
+
 # Main app
 if st.session_state["logged_in"]:
     st.success(f"Welcome, {st.session_state['username']}!")
     st.button("Logout", on_click=logout)
-    # Add your application functionality here
+
+    # Dashboard functionality
     st.markdown(
         """
     <div style="text-align: center;">
@@ -74,6 +91,26 @@ if st.session_state["logged_in"]:
 """,
         unsafe_allow_html=True,
     )
+
+    # Update Password Section
+    if st.button("Update Password"):
+        st.session_state["show_change_password"] = True
+
+    if st.session_state["show_change_password"]:
+        st.markdown("### Change Password")
+        old_password = st.text_input("Old Password", type="password")
+        new_password = st.text_input("New Password", type="password")
+        confirm_new_password = st.text_input("Confirm New Password", type="password")
+        if st.button("Submit Password Change"):
+            if new_password != confirm_new_password:
+                st.error("New passwords do not match. Please try again.")
+            elif not old_password or not new_password:
+                st.error("All fields are required.")
+            else:
+                change_password(
+                    st.session_state["username"], old_password, new_password
+                )
+
 else:
     st.title("AIR QUALITY INSIGHTS DASHBOARD")
     st.title("Login / Signup Form")
