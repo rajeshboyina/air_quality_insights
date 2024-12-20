@@ -79,7 +79,7 @@ if st.session_state["logged_in"]:
     )
     st.markdown(
         """
-    <iframe title="AQI" width="600" height="373.5" src="https://app.powerbi.com/view?r=eyJrIjoiOGExYzY4YzEtMjRhNC00MjAyLTlhZWMtYjRmODcwNjIxNDc1IiwidCI6IjkzZTljMTgyLTdhOWMtNGI4YS04YzY1LTM3OTMyNDZlYzgzMyJ9" frameborder="0" allowFullScreen="true"></iframe>
+    <iframe title="AQI" width="800" height="473.5" src="https://app.powerbi.com/view?r=eyJrIjoiOGExYzY4YzEtMjRhNC00MjAyLTlhZWMtYjRmODcwNjIxNDc1IiwidCI6IjkzZTljMTgyLTdhOWMtNGI4YS04YzY1LTM3OTMyNDZlYzgzMyJ9" frameborder="0" allowFullScreen="true"></iframe>
     """,
         unsafe_allow_html=True,
     )
